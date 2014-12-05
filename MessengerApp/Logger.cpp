@@ -24,11 +24,10 @@ string Logger::getCurrentTime()
     char buffer[50];
     int i;
     
-    string date;
-    sprintf(buffer, "[%d-%d-%2d %2d:%2d]", now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, 
+    sprintf(buffer, "[%d-%d-%d %2d:%2d]", now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, 
                     now->tm_hour, now->tm_min);
     
-    return date;
+    return buffer;
 }
 
 void Logger::init()
@@ -53,7 +52,7 @@ void Logger::loggedIn(string username)
     filelog.open("serverlog.txt", ios::app);
     if(filelog.is_open())
     {
-        filelog << getCurrentTime() << username << " logged in." << endl;
+        filelog << getCurrentTime() << " " << username << " logged in." << endl;
         filelog.close();
     }
     else
@@ -68,7 +67,7 @@ void Logger::join(string username, string namagrup)
     filelog.open("serverlog.txt", ios::app);
     if(filelog.is_open())
     {
-        filelog << getCurrentTime() << username << " joined " << namagrup << endl;
+        filelog << getCurrentTime() << " "  << username << " joined " << namagrup << endl;
         filelog.close();
     }
     else
@@ -83,7 +82,7 @@ void Logger::message(string namaPengirim, string tujuan)
     filelog.open("serverlog.txt", ios::app);
     if(filelog.is_open())
     {
-        filelog << getCurrentTime() << namaPengirim << " message " << tujuan << endl;
+        filelog << getCurrentTime() << " "  << namaPengirim << " message " << tujuan << endl;
         filelog.close();
     }
     else
@@ -98,7 +97,7 @@ void Logger::loggedOut(string username)
     filelog.open("serverlog.txt", ios::app);
     if(filelog.is_open())
     {
-        filelog << getCurrentTime() << username << " logged out." << endl;
+        filelog << getCurrentTime() << " " << username << " logged out." << endl;
         filelog.close();
     }
     else
@@ -113,7 +112,7 @@ void Logger::left(string username, string leftFromWhere)
     filelog.open("serverlog.txt", ios::app);
     if(filelog.is_open())
     {
-        filelog << getCurrentTime() << username << " left " << leftFromWhere << endl;
+        filelog << getCurrentTime() << " " << username << " left " << leftFromWhere << endl;
         filelog.close();
     }
     else
