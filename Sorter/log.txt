@@ -1,0 +1,8 @@
+05113302 me: jangan lupa tidur
+05113402 dia: iya nanti tidur
+05113312 me: sekarang aja tidur
+05113202 dia: ah nanti aja
+05113302 me: emang belum ngantuk?
+05112302 dia: udah sih
+05114302 me: yaudah tidur
+05113352 dia: iya
