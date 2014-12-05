@@ -61,3 +61,63 @@ void Logger::loggedIn(string username)
         cout << "Gagal membuka file serverlog.txt" << endl;
     }
 }
+
+void Logger::join(string username, string namagrup)
+{
+    ofstream filelog;
+    filelog.open("serverlog.txt", ios::app);
+    if(filelog.is_open())
+    {
+        filelog << getCurrentTime() << username << " joined " << namagrup << endl;
+        filelog.close();
+    }
+    else
+    {
+        cout << "Gagal membuka file serverlog.txt" << endl;
+    }
+}
+
+void Logger::message(string namaPengirim, string tujuan)
+{
+    ofstream filelog;
+    filelog.open("serverlog.txt", ios::app);
+    if(filelog.is_open())
+    {
+        filelog << getCurrentTime() << namaPengirim << " message " << tujuan << endl;
+        filelog.close();
+    }
+    else
+    {
+        cout << "Gagal membuka file serverlog.txt" << endl;
+    }
+}
+
+void Logger::loggedOut(string username)
+{
+    ofstream filelog;
+    filelog.open("serverlog.txt", ios::app);
+    if(filelog.is_open())
+    {
+        filelog << getCurrentTime() << username << " logged out." << endl;
+        filelog.close();
+    }
+    else
+    {
+        cout << "Gagal membuka file serverlog.txt" << endl;
+    }
+}
+
+void Logger::left(string username, string leftFromWhere)
+{
+    ofstream filelog;
+    filelog.open("serverlog.txt", ios::app);
+    if(filelog.is_open())
+    {
+        filelog << getCurrentTime() << username << " left " << leftFromWhere << endl;
+        filelog.close();
+    }
+    else
+    {
+        cout << "Gagal membuka file serverlog.txt" << endl;
+    }
+}
