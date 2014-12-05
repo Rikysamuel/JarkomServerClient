@@ -8,10 +8,11 @@
 #include "Server.h"
 
 //initiate static member
-int *Server::length = new int[MAXBUF];
-string *Server::status = new string[MAXBUF];
-string *Server::buffer = new string[MAXBUF];
-pthread_mutex_t Server::lock = PTHREAD_MUTEX_INITIALIZER;
+UserData *Server::users = new UserData[MAXUSER];
+int Server::j=-1;
+//int *Server::length = new int[MAXBUF];
+//string *Server::status = new string[MAXBUF];
+//string *Server::buffer = new string[MAXBUF];
 
 Server::Server() {
     port = 9000;
@@ -25,15 +26,14 @@ Server::Server(const Server& orig) {
     this->port = orig.port;
     this->serv_addr = orig.serv_addr;
     this->sock = orig.sock;
+    this->users = orig.users;
 }
 
 Server::~Server() {
-    printf("destructor called");
 }
 
-void Server::Listen(int maxuser) {
-    listen(sock,maxuser); 
-    printf("listen to %d user\n",maxuser);
+void Server::Listen() {
+    listen(sock,MAXUSER); 
 }
 
 void Server::bindServer() {
@@ -45,14 +45,12 @@ void Server::bindServer() {
         close(sock);
         printf("Cannot bind socket\n");
         exit(1);
-    } else{
-        printf("Server binded\n");
     }
 }
 
 void Server::closeClientSocket(int sock_client) {
      close(sock_client);
-     printf("socket %d closed\n",sock_client);
+     printf("Client %d logged out\n",sock_client);
 }
 
 void Server::openTCPConnection() {
@@ -93,19 +91,25 @@ string Server::getMessage(string message){
 
 void Server::createClientSocket() {
     clilen = sizeof(cli_addr);
-    pthread_t socket_thread[10];
+    pthread_t socket_thread[2*MAXUSER];
     int rc1, rc2; int i=0;
     
     while(1){
         printf("listening....................\n");
         client_sock = accept(sock, (struct sockaddr *) &cli_addr, &clilen);
+        
         int *cli_sock = new int[1];
         *cli_sock = client_sock;
         cout << "client sock: " << &cli_sock << endl;
         
-        Server::buffer[client_sock] = " ";
-        Server::length[client_sock] = -1;
-        Server::status[client_sock] = "online";
+//        Server::buffer[client_sock] = " ";
+//        Server::length[client_sock] = -1;
+//        Server::status[client_sock] = "online";
+        j++;
+        Server::users[j].setID(client_sock);
+        Server::users[j].setStatus("online");
+        Server::users[j].setMessage("");
+        Server::users[j].setLength(-1);
         
         cout << "Creating thread: " << i << endl;
         if((rc1=pthread_create(&socket_thread[i], NULL, &Server::recvDataSocket, &cli_sock))<0){
@@ -117,7 +121,6 @@ void Server::createClientSocket() {
         if((rc2=pthread_create(&socket_thread[i], NULL, &Server::sendDataSocket, &cli_sock))<0){
            cout << "Error" << endl;
         } cout << &socket_thread[i] << " created" << endl;
-        
 //        pthread_join(socket_thread[i],NULL);
     }
 }
@@ -125,27 +128,27 @@ void Server::createClientSocket() {
 void* Server::sendDataSocket(void* client_sock) {
     cout << "Thread sender created" << endl;
     
+    int active = j;
     int c_sock = *((int*)client_sock);
     int cl_sock = *((int*)c_sock);
     
-    cout << "Client Socket: " << cl_sock << endl;
+    cout << "Client Socket: " << users[active].getID() << endl;
     
     char* reply = (char*) ("\"Welcome to the MESSENGER\"\n");   //welcome message
     write(cl_sock , reply , strlen(reply)); //send welcome message
     
     /* Main loop */
-    while(status[cl_sock]=="online"){
-        if(length[cl_sock]>=0){
+    while(users[active].getStatus()=="online"){
+        if(users[active].getLength()>=0){
 //            pthread_mutex_lock(&lock);
-            cout << "lock sender called" << endl;
-            length[cl_sock] = -1;
+//            cout << "lock sender called" << endl;
+            users[active].setLength(-1);
 //            pthread_mutex_unlock(&lock);
-            cout << "unlock sender called" << endl;
+//            cout << "unlock sender called" << endl;
         }
     }
     
-    
-    cout << "Thread-sender for sock: " << cl_sock << " die..........." << endl;
+    cout << "Thread-sender for sock: " << users[active].getID() << " die..........." << endl;
     pthread_exit(NULL);
 }
 
@@ -153,47 +156,49 @@ void* Server::sendDataSocket(void* client_sock) {
 void *Server::recvDataSocket(void *client_sock) {
     cout << "Thread listener created" << endl;
     
+    int active = j;
     int c_sock = *((int*)client_sock);
     int cl_sock = *((int*)c_sock);
     char* buff; buff = new char[MAXBUF];
     bzero(buff,MAXBUF); int len;
     
-    cout << "Client Socket: " << cl_sock << endl;
-    cout << "status client "<< cl_sock << ": "<< status[cl_sock] << endl;
+    cout << "Client Socket: " << users[active].getID() << endl;
+    cout << "status client "<< users[active].getID() << ": "<< users[active].getStatus() << endl;
 
     /* Main loop */
-    while(status[cl_sock]=="online"){
+    while(users[active].getStatus()=="online"){
         
         cout << "lock listener called" << endl;
-        buffer[cl_sock] = "";
+        users[active].setMessage("");
         bzero(buff,MAXBUF);
-        len = recv(cl_sock, buff , MAXBUF , 0); //receive message from user
-        buffer[cl_sock] = (string)buff;
-//        buffer[cl_sock] = buffer[cl_sock].substr(0,buffer[cl_sock].length()-2); //delete "\n" character
+        len = recv(users[active].getID(), buff , MAXBUF , 0); //receive message from user
+        printf("%s\n",buff);
+        users[active].setMessage((string)buff);
+        //        buffer[cl_sock] = buffer[cl_sock].substr(0,buffer[cl_sock].length()-2); //delete "\n" character
         cout << len << endl;
         
         if (len>=0){
-           if(buffer[cl_sock]=="logout"){   //if user type "logout"
+           if(users[active].getMessage()=="logout"){   //if user type "logout"
                cout << "masuk" << endl;
-                closeClientSocket(cl_sock);
-                status[cl_sock]="offline";
-                cout << "client "<< cl_sock << ": "<< Server::status[cl_sock] << endl;
+                closeClientSocket(users[active].getID());
+                users[active].setStatus("offline");
+                cout << "client "<< users[active].getID() << ": "<< users[active].getStatus() << endl;
                 break;
-           } else if(getDestination(buffer[cl_sock])=="--login--"){
+           } else if(getDestination(users[active].getMessage())=="--login--"){
                
-           } else if (getDestination(buffer[cl_sock])=="--register--"){
+           } else if (getDestination(users[active].getMessage())=="--register--"){
                
            } else{
-                cout << "dest: " << getDestination(buffer[cl_sock]) << endl;
-                cout << "Message: " << getMessage(buffer[cl_sock]) << endl;
-                cout << "Message len: " << getMessage(buffer[cl_sock]).length() << endl;
+                cout << "dest: " << getDestination(users[active].getMessage()) << endl;
+                cout << "Message: " << getMessage(users[active].getMessage()) << endl;
+                cout << "Message len: " << getMessage(users[active].getMessage()).length() << endl;
            }
-           length[cl_sock] = len;
+           users[active].setLength(len);
         }
-        cout << "bufer[" << cl_sock << "] : " << buffer[cl_sock].length() << endl;
-        cout << "unlock listener called" << endl;
+        cout << "bufer[" << active << "] : " << users[active].getMessage().length() << endl;
+//        cout << "unlock listener called" << endl;
     }
     
-    cout << "Thread-listener for sock: " << cl_sock << " die..........." << endl;
+    cout << "Thread-listener for sock: " << active << " die..........." << endl;
     pthread_exit(NULL);
 }

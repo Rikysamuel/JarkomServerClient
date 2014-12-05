@@ -64,6 +64,7 @@ private:
     
     static int len;
     static string buffer;
+    static string inbox;
 };
 
 #endif	/* CLIENT_H */

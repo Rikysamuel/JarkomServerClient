@@ -9,6 +9,7 @@
 #define	SERVER_H
 
 #define MAXBUF 200
+#define MAXUSER 10
 
 #include <cstdio>
 #include <sys/types.h>   // tipe data penting untuk sys/socket.h dan netinet/in.h
@@ -21,6 +22,7 @@
 #include <cstring>
 #include <iostream>
 #include <string>
+#include "UserData.h"
 using namespace std;
 
 class Server {
@@ -32,7 +34,7 @@ public:
     void openTCPConnection();
     void setSocketReusable();
     void bindServer();
-    void Listen(int maxuser);
+    void Listen();
     void createClientSocket();
     void closeConnection();
     
@@ -42,10 +44,11 @@ public:
     static void* recvDataSocket(void* client_sock);
     static void* sendDataSocket(void* client_sock);
     
-    static int* length;
-    static string* status;
-    static string* buffer;
-    static pthread_mutex_t lock;
+    static UserData *users;
+//    static int* length;
+//    static string* status;
+//    static string* buffer;
+    static int j;
 private:
     int sock;
     int client_sock;

@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     serv->openTCPConnection();
     serv->setSocketReusable();
     serv->bindServer();
-    serv->Listen(5);
+    serv->Listen();
     while(1){
         serv->createClientSocket();
     }
