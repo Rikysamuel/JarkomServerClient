@@ -1,0 +1,64 @@
+/* 
+ * File:   Client.h
+ * Author: rikysamuel
+ * Modified: Aryya
+ * Created on November 27, 2014, 6:10 PM
+ */
+
+#ifndef CLIENT_H
+#define	CLIENT_H
+
+#define MAXBUF 200
+#include <iostream>
+#include <cstdio>
+#include <sys/types.h>   // tipe data penting untuk sys/socket.h dan netinet/in.h
+#include <netinet/in.h>  // fungsi dan struct internet address
+#include <sys/socket.h>  // fungsi dan struct socket API
+#include <netdb.h>       // lookup domain/DNS hostname
+#include <unistd.h>
+#include <cstdlib>
+#include <errno.h>
+#include <cstring>
+#include <string>
+#include <fstream>
+
+using namespace std;
+class Client {
+public:
+    Client();
+    Client(const Client& orig);
+    ~Client();
+    
+    void openTCPConnection();
+    void setServerAddress(char* serv_address);
+    void reqConnect();
+    int Write(char* message);
+    void readServerReply();
+    int signup(string username,string password);
+    int login(string username, string password);
+    int logout();
+    string getusername();
+    void toLog(/*string msg,int type*/);
+    
+    /*Fungsi untuk memberikan perintah ke user*/
+    void printSignUp();
+    void printLogin();
+    bool isLoggedIn();
+    void setLoginStatus(bool status);
+    
+private:
+    string username;
+    string password;
+    string confirmPassword;
+    bool LoggedIn; /* State untuk menunjukkan bahwa usernya sudah login atau belum */
+    
+    int sock;
+    int port;
+    int len;
+    char *buffer;
+    struct sockaddr_in serv_addr;
+    struct hostent *server;
+};
+
+#endif	/* CLIENT_H */
+
