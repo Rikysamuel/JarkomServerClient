@@ -41,6 +41,7 @@ public:
     string getusername();
     void toLog(/*string msg,int type*/);
     void ConnectionHandler();
+    void sendMessage();
     
     static void* readServerReply(void* this_sock);
     static int status;
@@ -52,6 +53,7 @@ public:
     void setLoginStatus(bool status);
     
 private:
+    bool lock;
     string username;
     string password;
     string confirmPassword;

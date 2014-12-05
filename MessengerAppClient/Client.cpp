@@ -6,6 +6,7 @@
  */
 
 #include "Client.h"
+#include <cstring>
 
 int Client::status = 0;
 string Client::buffer = new char[MAXBUF];
@@ -86,6 +87,7 @@ void* Client::readServerReply(void* this_sock) {
         }
     }
     cout << "keluar...." << endl;
+    pthread_exit(NULL);
 }
 
 char* Client::signup(string username, string password){
@@ -121,6 +123,20 @@ char* Client::logout(){
     copy(text.begin(), text.end(), writable);
     writable[text.size()] = '\0';
     return writable;
+}
+
+void Client::sendMessage(){
+    string username;
+    string message;
+    buffer="";
+    printf("> username: ");
+    getline(cin,username);
+    printf("> message: ");
+    getline(cin,message);
+    username.append("|");
+    username.append(message);
+    buffer = username;
+    Write();
 }
 
 string Client::getusername(){
@@ -187,8 +203,8 @@ bool Client::isLoggedIn()
 
 void Client::ConnectionHandler(){
     pthread_t client_thread;
-    int rc;
-    string input;
+    int rc; string input;
+    
     int *cli_sock = new int[1];
         *cli_sock = sock;
     cout << "client sock: " << sock;
@@ -200,17 +216,25 @@ void Client::ConnectionHandler(){
     cout << "Thread created" << endl;
     
     while(buffer!="logout"){
-        printf("Your message: ");
-        getline(cin,buffer);
-        Write();
+        printf("> ");
+        getline(cin,input);
+        if (input=="message"){
+            sendMessage();
+            input="";
+        }
+        if (input=="logout"){
+            buffer="logout";
+        }
     }
-    
-    /* jika logout */
-    cout << "die............" << endl;
-    setLoginStatus(false);
-    status = 0;
+    if (input=="logout"){
+        cout << "die............" << endl;
+        setLoginStatus(false);
+        status = 0;
+    }
             
-    pthread_join(client_thread,NULL);
+//    pthread_cancel(client_thread);
+//    pthread_join(client_thread,NULL);
+//    pthread_exit(NULL);
 }
 
 int Client::getSock(){

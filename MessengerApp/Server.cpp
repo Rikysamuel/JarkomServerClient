@@ -15,6 +15,12 @@ int Server::j=-1;
 //string *Server::buffer = new string[MAXBUF];
 
 Server::Server() {
+    for(int i=0;i<MAXUSER;i++){
+        users[i].setID(0);
+        users[i].setLength(-1);
+        users[i].setMessage("");
+        users[i].setStatus("offline");
+    }
     port = 9000;
     printf("Server Started.........\n");
 }
@@ -121,16 +127,28 @@ void Server::createClientSocket() {
         if((rc2=pthread_create(&socket_thread[i], NULL, &Server::sendDataSocket, &cli_sock))<0){
            cout << "Error" << endl;
         } cout << &socket_thread[i] << " created" << endl;
-//        pthread_join(socket_thread[i],NULL);
+
     }
+    
+//    for(int t=0;t<=i;t++){
+//        pthread_cancel(socket_thread[t]);
+////        pthread_join(socket_thread[t],NULL);
+//    }
+//    for(int t=0;t<=i;t++){
+//        pthread_join(socket_thread[t],NULL);
+//    }
+//            pthread_join(socket_thread[i],NULL);
+//    pthread_exit(NULL);
 }
 
 void* Server::sendDataSocket(void* client_sock) {
     cout << "Thread sender created" << endl;
     
     int active = j;
+    cout << "send on :" <<  active << endl;
     int c_sock = *((int*)client_sock);
     int cl_sock = *((int*)c_sock);
+    char* buff; buff = new char[MAXBUF];
     
     cout << "Client Socket: " << users[active].getID() << endl;
     
@@ -140,11 +158,13 @@ void* Server::sendDataSocket(void* client_sock) {
     /* Main loop */
     while(users[active].getStatus()=="online"){
         if(users[active].getLength()>=0){
-//            pthread_mutex_lock(&lock);
-//            cout << "lock sender called" << endl;
+            cout << "masuk" << endl;
+            cout << "sender active: " << active << endl;
+            cout << "pesan diterima: " << users[active].getMessage().length() << endl;
+            strcpy(buff,users[active].getMessage().c_str());
+            write(cl_sock , buff , strlen(reply));
             users[active].setLength(-1);
-//            pthread_mutex_unlock(&lock);
-//            cout << "unlock sender called" << endl;
+//            users[active].setMessage("");
         }
     }
     
@@ -157,6 +177,7 @@ void *Server::recvDataSocket(void *client_sock) {
     cout << "Thread listener created" << endl;
     
     int active = j;
+    cout << "recv on :" <<  active << endl;
     int c_sock = *((int*)client_sock);
     int cl_sock = *((int*)c_sock);
     char* buff; buff = new char[MAXBUF];
@@ -174,7 +195,7 @@ void *Server::recvDataSocket(void *client_sock) {
         len = recv(users[active].getID(), buff , MAXBUF , 0); //receive message from user
         printf("%s\n",buff);
         users[active].setMessage((string)buff);
-        //        buffer[cl_sock] = buffer[cl_sock].substr(0,buffer[cl_sock].length()-2); //delete "\n" character
+//  users[active].setMessage(users[active].getMessage().substr(0,users[active].getMessage().length()-2)); //delete "\n" character
         cout << len << endl;
         
         if (len>=0){
@@ -189,11 +210,17 @@ void *Server::recvDataSocket(void *client_sock) {
            } else if (getDestination(users[active].getMessage())=="--register--"){
                
            } else{
-                cout << "dest: " << getDestination(users[active].getMessage()) << endl;
+                string dest = getDestination(users[active].getMessage());
+                int id_dest = atoi(dest.c_str());
+                cout << "dest: " << dest << endl;
                 cout << "Message: " << getMessage(users[active].getMessage()) << endl;
                 cout << "Message len: " << getMessage(users[active].getMessage()).length() << endl;
+                cout << "test : " << active << endl;
+                users[1].setMessage(getMessage(users[active].getMessage()));
+                cout << "test lawan: " << users[1].getMessage()<< endl;
            }
            users[active].setLength(len);
+           users[1].setLength(len);
         }
         cout << "bufer[" << active << "] : " << users[active].getMessage().length() << endl;
 //        cout << "unlock listener called" << endl;
