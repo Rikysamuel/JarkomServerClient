@@ -178,9 +178,9 @@ void *Server::recvDataSocket(void *client_sock) {
                 status[cl_sock]="offline";
                 cout << "client "<< cl_sock << ": "<< Server::status[cl_sock] << endl;
                 break;
-           } else if(getDestination([buffer[cl_sock]])=="--login--"){
+           } else if(getDestination(buffer[cl_sock])=="--login--"){
                
-           } else if (getDestination([buffer[cl_sock]])=="--register--"){
+           } else if (getDestination(buffer[cl_sock])=="--register--"){
                
            } else{
                 cout << "dest: " << getDestination(buffer[cl_sock]) << endl;

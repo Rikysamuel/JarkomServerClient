@@ -67,29 +67,16 @@ void Client::setServerAddress(char* serv_address) {
 }
 
 int Client::Write(char* message) {
-//    len = write(sock,message,maxbuffer);
-    
     printf("Your message: ");
     gets(message);
-//    printf("%s\n",strerror(errno));
-    
     bzero(buffer,MAXBUF);
     strcpy(buffer,message);
     len = send(sock,buffer,strlen(buffer),0);
-//    printf("sock: %d\n",sock);
-//    printf("pesan: %s\n",message);
-//    printf("panjang: %i\n",(int)strlen(message));
     return len;
 }
 
 void Client::readServerReply() {
-//    bzero(buffer,MAXBUF);
     len = recv(sock, buffer , MAXBUF , 0);
-//    bzero(buffer,MAXBUF);
-//    printf("%d\n",sock);
-//    printf("%d\n",len);
-//    printf("%d",(int)sizeof(buffer));
-//    printf("%s\n",strerror(errno));
     if (len >= 0){
         printf("%s\n", buffer);
     }
