@@ -7,15 +7,17 @@
 
 #include "Client.h"
 
+int Client::status = 0;
+string Client::buffer = new char[MAXBUF];
+int Client::len = -1;
+
 Client::Client() {
-    buffer = new char[MAXBUF];
     port = 9000;
 //    printf("constructor called\n");
 }
 
 Client::Client(const Client& orig) {
     this->buffer = orig.buffer;
-    this->len = orig.len;
     this->port = orig.port;
     this->serv_addr = orig.serv_addr;
     this->server = orig.server;
@@ -23,8 +25,7 @@ Client::Client(const Client& orig) {
 }
 
 Client::~Client() {
-//    printf("destructor called\n");
-    delete [] buffer;
+    
 }
 
 void Client::openTCPConnection() {
@@ -36,6 +37,7 @@ void Client::openTCPConnection() {
 }
 
 void Client::reqConnect() {
+    char* buff; buff = new char[MAXBUF];
     bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
@@ -44,16 +46,11 @@ void Client::reqConnect() {
 
     // connect ke server, jika error keluar
     if (connect(sock,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) exit(1);
-//    printf("%d\n",ntohs(serv_addr.sin_port));
-//    printf("%d.%d.%d.%d\n",
-//    int(serv_addr.sin_addr.s_addr&0xFF),
-//    int((serv_addr.sin_addr.s_addr&0xFF00)>>8),
-//    int((serv_addr.sin_addr.s_addr&0xFF0000)>>16),
-//    int((serv_addr.sin_addr.s_addr&0xFF000000)>>24));
     
-    len = recv(sock, buffer , MAXBUF , 0);
+    cout << "Server greetings: ";
+    len = recv(sock, buff , MAXBUF , 0);
     if (len >= 0){
-        printf("Server Greetings: %s", buffer);
+        printf("%s\n", buff);
     }
 }
 
@@ -66,23 +63,32 @@ void Client::setServerAddress(char* serv_address) {
     printf("Connected to Server!\n");
 }
 
-int Client::Write(char* message) {
-    printf("Your message: ");
-    gets(message);
-    bzero(buffer,MAXBUF);
-    strcpy(buffer,message);
-    len = send(sock,buffer,strlen(buffer),0);
+int Client::Write() {
+    char* buff; buff = new char[MAXBUF];
+    bzero(buff,MAXBUF);
+    strcpy(buff,buffer.c_str());
+    len = send(sock,buff,strlen(buff),0);
     return len;
 }
 
-void Client::readServerReply() {
-    len = recv(sock, buffer , MAXBUF , 0);
-    if (len >= 0){
-        printf("%s\n", buffer);
+void* Client::readServerReply(void* this_sock) {
+    int client_sock = *(int*)this_sock;
+    int my_sock = *(int*)client_sock;
+    
+    char* buff;buff=new char[MAXBUF];
+    
+    while(status==1){
+        len = recv(my_sock, buff , MAXBUF , 0);
+        buffer = (string)buff;
+        if (len >= 0){
+            cout << buffer << endl;
+            len=-1;
+        }
     }
+    cout << "keluar...." << endl;
 }
 
-int Client::signup(string username, string password){
+char* Client::signup(string username, string password){
 	string text;
 	text.append("--register--");
 	text.append(username);
@@ -91,10 +97,10 @@ int Client::signup(string username, string password){
     char * writable = new char[text.size() + 1];
     copy(text.begin(), text.end(), writable);
     writable[text.size()] = '\0';
-    Write(writable);
+    return writable;
 }
 
-int Client::login(string username, string password){
+char* Client::login(string username, string password){
 	string text;
 	text.append("--login--");
 	text.append(username);
@@ -103,10 +109,10 @@ int Client::login(string username, string password){
     char * writable = new char[text.size() + 1];
     copy(text.begin(), text.end(), writable);
     writable[text.size()] = '\0';
-    Write(writable);
+    return writable;
 }
 
-int Client::logout(){
+char* Client::logout(){
 	string text;
 	text.append("--logout--:");
 	text.append(getusername());
@@ -114,7 +120,8 @@ int Client::logout(){
     char * writable = new char[text.size() + 1];
     copy(text.begin(), text.end(), writable);
     writable[text.size()] = '\0';
-    Write(writable);}
+    return writable;
+}
 
 string Client::getusername(){
 	return username;
@@ -162,6 +169,8 @@ void Client::printLogin()
     if(password.compare(passwordCheck) == 0)
     {
         cout << "Success Login" << endl;
+        setLoginStatus(true);
+        status = 1;
     }
     login(username, password);
 }
@@ -174,4 +183,36 @@ void Client::setLoginStatus(bool status)
 bool Client::isLoggedIn()
 {
     return LoggedIn;
+}
+
+void Client::ConnectionHandler(){
+    pthread_t client_thread;
+    int rc;
+    string input;
+    int *cli_sock = new int[1];
+        *cli_sock = sock;
+    cout << "client sock: " << sock;
+    
+    cout << "Creating thread" << endl;
+    if((rc=pthread_create(&client_thread, NULL, &Client::readServerReply, &cli_sock))<0){
+       cout << "Error" << endl;
+    }
+    cout << "Thread created" << endl;
+    
+    while(buffer!="logout"){
+        printf("Your message: ");
+        getline(cin,buffer);
+        Write();
+    }
+    
+    /* jika logout */
+    cout << "die............" << endl;
+    setLoginStatus(false);
+    status = 0;
+            
+    pthread_join(client_thread,NULL);
+}
+
+int Client::getSock(){
+    return sock;
 }

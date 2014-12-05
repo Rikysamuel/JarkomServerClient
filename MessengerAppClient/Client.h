@@ -32,13 +32,17 @@ public:
     void openTCPConnection();
     void setServerAddress(char* serv_address);
     void reqConnect();
-    int Write(char* message);
-    void readServerReply();
-    int signup(string username,string password);
-    int login(string username, string password);
-    int logout();
+    int getSock();
+    int Write();
+    char* signup(string username,string password);
+    char* login(string username, string password);
+    char* logout();
     string getusername();
     void toLog(/*string msg,int type*/);
+    void ConnectionHandler();
+    
+    static void* readServerReply(void* this_sock);
+    static int status;
     
     /*Fungsi untuk memberikan perintah ke user*/
     void printSignUp();
@@ -54,10 +58,11 @@ private:
     
     int sock;
     int port;
-    int len;
-    char *buffer;
     struct sockaddr_in serv_addr;
     struct hostent *server;
+    
+    static int len;
+    static string buffer;
 };
 
 #endif	/* CLIENT_H */

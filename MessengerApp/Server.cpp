@@ -101,6 +101,7 @@ void Server::createClientSocket() {
         client_sock = accept(sock, (struct sockaddr *) &cli_addr, &clilen);
         int *cli_sock = new int[1];
         *cli_sock = client_sock;
+        cout << "client sock: " << &cli_sock << endl;
         
         Server::buffer[client_sock] = " ";
         Server::length[client_sock] = -1;
@@ -168,7 +169,7 @@ void *Server::recvDataSocket(void *client_sock) {
         bzero(buff,MAXBUF);
         len = recv(cl_sock, buff , MAXBUF , 0); //receive message from user
         buffer[cl_sock] = (string)buff;
-        buffer[cl_sock] = buffer[cl_sock].substr(0,buffer[cl_sock].length()-2); //delete "\n" character
+//        buffer[cl_sock] = buffer[cl_sock].substr(0,buffer[cl_sock].length()-2); //delete "\n" character
         cout << len << endl;
         
         if (len>=0){

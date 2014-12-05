@@ -14,13 +14,16 @@ using namespace std;
  * 
  */
 int main(int argc, char** argv) {
-    char *message = new char[200];
-    
     string input;
     Client klien;
+//    int rc;
+//    pthread_t cli_thread;
+    
+    
     klien.setLoginStatus(false);
     while(input.compare("exit") != 0)
     {
+        cout << klien.isLoggedIn() << endl;
         cout << "> ";
         if(!klien.isLoggedIn())
         {
@@ -41,6 +44,7 @@ int main(int argc, char** argv) {
             else if(input.compare("login") == 0)
             {
                 klien.printLogin();
+                cout << "keluar login" << endl;
             }
             
             /* Jika commandnya message, create, or join tapi belum login */
@@ -49,6 +53,12 @@ int main(int argc, char** argv) {
             {
                 cout << "Silahkan login terlebih dahulu" << endl;
             }
+        } else{
+            cout << "req connect.........." << endl;
+            klien.openTCPConnection();
+            klien.setServerAddress((char*)"127.0.0.1");
+            klien.reqConnect();
+            klien.ConnectionHandler();
         }
         
     }

@@ -24,10 +24,6 @@ int main(int argc, char** argv) {
     while(1){
         serv->createClientSocket();
     }
-//        serv->setBufferEmpty();
-//        serv->readClientMessage();
-//        serv->closeClientSocket();
-//    serv->closeConnection();
     return 0;
 }
 
