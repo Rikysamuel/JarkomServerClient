@@ -9,18 +9,19 @@
 #define	CLIENT_H
 
 #define MAXBUF 200
-#include <iostream>
-#include <cstdio>
-#include <sys/types.h>   // tipe data penting untuk sys/socket.h dan netinet/in.h
-#include <netinet/in.h>  // fungsi dan struct internet address
-#include <sys/socket.h>  // fungsi dan struct socket API
-#include <netdb.h>       // lookup domain/DNS hostname
-#include <unistd.h>
-#include <cstdlib>
-#include <errno.h>
-#include <cstring>
-#include <string>
-#include <fstream>
+#include "AllInclude.h"
+//#include <iostream>
+//#include <cstdio>
+//#include <sys/types.h>   // tipe data penting untuk sys/socket.h dan netinet/in.h
+//#include <netinet/in.h>  // fungsi dan struct internet address
+//#include <sys/socket.h>  // fungsi dan struct socket API
+//#include <netdb.h>       // lookup domain/DNS hostname
+//#include <unistd.h>
+//#include <cstdlib>
+//#include <errno.h>
+//#include <cstring>
+//#include <string>
+//#include <fstream>
 
 using namespace std;
 class Client {
