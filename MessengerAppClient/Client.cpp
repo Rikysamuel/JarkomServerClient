@@ -82,7 +82,7 @@ void* Client::readServerReply(void* this_sock) {
         len = recv(my_sock, buff , MAXBUF , 0);
         buffer = (string)buff;
         if (len >= 0){
-            cout << buffer << endl;
+            cout << "New Message: " << buffer << endl;
             len=-1;
         }
     }

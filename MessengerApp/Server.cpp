@@ -162,9 +162,9 @@ void* Server::sendDataSocket(void* client_sock) {
             cout << "sender active: " << active << endl;
             cout << "pesan diterima: " << users[active].getMessage().length() << endl;
             strcpy(buff,users[active].getMessage().c_str());
-            write(cl_sock , buff , strlen(reply));
+            write(cl_sock , buff , strlen(buff));
             users[active].setLength(-1);
-//            users[active].setMessage("");
+            users[active].setMessage("");
         }
     }
     
