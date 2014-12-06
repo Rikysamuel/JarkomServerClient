@@ -44,8 +44,10 @@ public:
     void sendMessage();
     void createGroup();
     void leaveGroup();
+    void chatGroup();
     static void* readServerReply(void* this_sock);
     static int status;
+    static void openInbox();
     
     /*Fungsi untuk memberikan perintah ke user*/
     void printSignUp();
@@ -67,7 +69,6 @@ private:
     
     static int len;
     static string buffer;
-    static string inbox;
 };
 
 #endif	/* CLIENT_H */

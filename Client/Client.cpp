@@ -88,12 +88,17 @@ void* Client::readServerReply(void* this_sock) {
         len = recv(my_sock, buff , MAXBUF , 0);
         buffer = (string)buff;
         if (len >= 0){
-            cout << "New Message: " << buffer << endl;
+            cout << "New Message received!"<< endl;
             len=-1;
         }
     }
     cout << "keluar...." << endl;
     pthread_exit(NULL);
+}
+
+void Client::openInbox(){
+    cout << buffer << endl;
+    buffer="";
 }
 
 char* Client::signup(string username, string password){
@@ -158,6 +163,7 @@ void Client::createGroup(){
     cout << "test create group: " << buffer << endl;
     Write();
 }
+
 void Client::leaveGroup(){
     string request = "--leave--|";
     string groupname;buffer="";
@@ -168,6 +174,18 @@ void Client::leaveGroup(){
     cout << "test leave group" << buffer << endl;
     Write();
 }
+
+void Client::chatGroup(){
+    string request = "--leave--|";
+    string groupname;buffer="";
+    printf("> Group name:");
+    getline(cin, groupname);
+    request.append(groupname);
+    buffer = request;
+    cout << "test leave group" << buffer << endl;
+    Write();
+}
+
 string Client::getusername(){
 	return username;
 }
@@ -291,6 +309,13 @@ void Client::ConnectionHandler(char* buff){
         }
         if(input=="create"){
             createGroup();
+        }
+        if(input=="read"){
+            openInbox();
+            buffer="";
+        }
+        if(input=="group"){
+
         }
     }
     if (input=="logout"){
