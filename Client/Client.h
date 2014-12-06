@@ -47,13 +47,19 @@ public:
     void chatGroup();
     static void* readServerReply(void* this_sock);
     static int status;
+<<<<<<< HEAD
+    void joinGroup();
+=======
     static void openInbox();
     
+>>>>>>> 325378504770e3048add398c06482f64c3d04ff1
     /*Fungsi untuk memberikan perintah ke user*/
     void printSignUp();
     void printLogin();
     bool isLoggedIn();
     void setLoginStatus(bool status);
+    void saveMessage(char *namaFile, string from, string message);
+    string getCurrentTime();
     
 private:
     bool lock;

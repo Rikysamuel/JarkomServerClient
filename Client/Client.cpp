@@ -176,6 +176,19 @@ void Client::leaveGroup(){
     cout << "test leave group" << buffer << endl;
     Write();
 }
+void Client::joinGroup(){
+    string request = "--join--|";
+    string groupname;
+    buffer="";
+    printf("> Group Name: ");
+    getline(cin,groupname);
+    request.append(groupname);
+    request.append(":");
+    request.append(getusername());
+    buffer = request;
+    cout << "test join group: " << buffer << endl;
+    Write();
+}
 
 void Client::chatGroup(){
     string request = "--group--|";
@@ -314,6 +327,8 @@ void Client::ConnectionHandler(char* buff){
         if(input=="create"){
             createGroup();
         }
+        if(input=="join"){
+            joinGroup();
         if(input=="read"){
             openInbox();
             buffer="";
@@ -335,4 +350,31 @@ void Client::ConnectionHandler(char* buff){
 
 int Client::getSock(){
     return sock;
+}
+
+void Client::saveMessage(char *namaFile, string from, string message)
+{
+	ofstream file;
+	file.open(namaFile, ios::app);
+	if(file.is_open())
+	{
+		file << getCurrentTime() << " " << from << ":" << message << endl;
+	}
+	else
+	{
+		cout << "gagal membuka file" << endl;
+	}
+}
+
+string Client::getCurrentTime()
+{
+    time_t t = time(0);   // get time now
+    struct tm * now = localtime( & t );
+    char buffer[50];
+    int i;
+    
+    sprintf(buffer, "[%d-%d-%d %2d:%2d]", now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, 
+                    now->tm_hour, now->tm_min);
+    
+    return buffer;
 }
