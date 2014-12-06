@@ -65,6 +65,7 @@ public:
     
     //function tambahan for client
     void signup(string username, string password);
+    bool cariUser(string username);
     
 private:
     int sock;
