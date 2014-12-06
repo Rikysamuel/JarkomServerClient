@@ -221,7 +221,7 @@ void *Server::recvDataSocket(void *client_sock) {
         bzero(buff,MAXBUF);
         len = recv(users[active].getID(), buff , MAXBUF , 0); //receive message from user
         printf("%s\n",buff);
-        buff = strtok(buff,"\n \r \t");
+        buff = strtok(buff,"\n\r");
         printf("habis di strtok: %s\n",buff);
         cout << "panjang: " << strlen(buff) << endl;
         users[active].setMessage((string)buff);
