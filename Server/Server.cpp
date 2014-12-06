@@ -284,7 +284,7 @@ void *Server::recvDataSocket(void *client_sock) {
                 char* membername;
                 strcpy(membername, name.c_str());
                 Server::group.addNewMemberGroup(groupname,membername);
-            }else if(dest="--leave--"){
+            }else if(dest=="--leave--"){
                 string group=getUsernameFromMessage(users[active].getMessage());
                 string name=getPasswordFromMessage(users[active].getMessage());
                 char* groupname;

@@ -19,7 +19,7 @@ Group::~Group() {
 void Group::newGroup(string namaGroup)
 {
     ofstream file;
-    file.open(namaGroup.c_str());
+    file.open("f.txt");
     file.close();
 }
 
