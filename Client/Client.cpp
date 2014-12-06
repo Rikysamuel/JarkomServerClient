@@ -99,8 +99,9 @@ void* Client::readServerReply(void* this_sock) {
 char* Client::signup(string username, string password){
 	string text;
 	text.append("--register--");
-	text.append(username);
         text.append("|");
+	text.append(username);
+    text.append(":");
 	text.append(password);
     char * writable = new char[text.size() + 1];
     copy(text.begin(), text.end(), writable);
@@ -157,7 +158,16 @@ void Client::createGroup(){
     cout << "test create group: " << buffer << endl;
     Write();
 }
-
+void Client::leaveGroup(){
+    string request = "--leave--|";
+    string groupname;buffer="";
+    printf("> Group name:");
+    getline(cin, groupname);
+    request.append(groupname);
+    buffer = request;
+    cout << "test leave group" << buffer << endl;
+    Write();
+}
 string Client::getusername(){
 	return username;
 }

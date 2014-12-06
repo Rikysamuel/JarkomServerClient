@@ -43,7 +43,7 @@ public:
     void ConnectionHandler(char* msg);
     void sendMessage();
     void createGroup();
-    
+    void leaveGroup();
     static void* readServerReply(void* this_sock);
     static int status;
     

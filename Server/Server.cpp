@@ -284,8 +284,15 @@ void *Server::recvDataSocket(void *client_sock) {
                 char* membername;
                 strcpy(membername, name.c_str());
                 Server::group.addNewMemberGroup(groupname,membername);
-            }
-            else{
+            }else if(dest="--leave--"){
+                string group=getUsernameFromMessage(users[active].getMessage());
+                string name=getPasswordFromMessage(users[active].getMessage());
+                char* groupname;
+                strcpy(groupname, group.c_str());
+                char* membername;
+                strcpy(membername, name.c_str());
+                Server::group.delMember(groupname,membername);
+            }else{
                  cout << "dest: " << dest << endl;
                  cout << "len dest: " << dest.length() << endl;
                  cout << "id_dest" << id_dest << endl;
