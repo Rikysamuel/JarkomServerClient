@@ -23,6 +23,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <list>
 #include "UserData.h"
 #include "Group.h"
 #include "Logger.h"
@@ -56,6 +57,7 @@ public:
     static void listUser();
     static int searchIDbyName(string name);
     static bool checkNameExist();
+    static void sendToAll(char* filename, string message);
     
 //    static int* length;
 //    static string* status;

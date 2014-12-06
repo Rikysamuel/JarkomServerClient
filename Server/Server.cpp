@@ -391,6 +391,7 @@ int Server::searchIDbyName(string name) {
             return i;
         }
     }
+    return -1;
 }
 
 int Server::signup(string username, string password){
@@ -428,4 +429,26 @@ bool Server::cariUser(string username)
     {
         cout << "gagal membuka file userlist.txt" << endl;
     }
+}
+
+void Server::sendToAll(char* filename, string message){
+	list<string> members = Server::group.getDaftarUser(filename);
+	list<string> offmembers;
+	string member; int pos;
+
+	while(!members.empty()){
+		member = members.front();
+		pos = searchIDbyName(member);
+		if (pos!=-1){
+			users[pos].setMessage(message);
+			members.pop_front();
+		} else{
+			offmembers.push_front(member);
+		}
+	}
+	cout << "offline members: " << endl;
+	while(!offmembers.empty()){
+		cout << members.front() << endl;
+		members.pop_front();
+	}
 }

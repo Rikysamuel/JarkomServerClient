@@ -88,12 +88,17 @@ void* Client::readServerReply(void* this_sock) {
         len = recv(my_sock, buff , MAXBUF , 0);
         buffer = (string)buff;
         if (len >= 0){
-            cout << "New Message: " << buffer << endl;
+            cout << "New Message received!"<< endl;
             len=-1;
         }
     }
     cout << "keluar...." << endl;
     pthread_exit(NULL);
+}
+
+void Client::openInbox(){
+    cout << buffer << endl;
+    buffer="";
 }
 
 char* Client::signup(string username, string password){
@@ -158,6 +163,7 @@ void Client::createGroup(){
     cout << "test create group: " << buffer << endl;
     Write();
 }
+
 void Client::leaveGroup(){
     string request = "--leave--|";
     string groupname;buffer="";
@@ -181,6 +187,18 @@ void Client::joinGroup(){
     cout << "test join group: " << buffer << endl;
     Write();
 }
+
+void Client::chatGroup(){
+    string request = "--leave--|";
+    string groupname;buffer="";
+    printf("> Group name:");
+    getline(cin, groupname);
+    request.append(groupname);
+    buffer = request;
+    cout << "test leave group" << buffer << endl;
+    Write();
+}
+
 string Client::getusername(){
 	return username;
 }
@@ -305,8 +323,17 @@ void Client::ConnectionHandler(char* buff){
         if(input=="create"){
             createGroup();
         }
+<<<<<<< HEAD
         if(input=="join"){
             joinGroup();
+=======
+        if(input=="read"){
+            openInbox();
+            buffer="";
+        }
+        if(input=="group"){
+
+>>>>>>> 325378504770e3048add398c06482f64c3d04ff1
         }
     }
     if (input=="logout"){
@@ -322,4 +349,31 @@ void Client::ConnectionHandler(char* buff){
 
 int Client::getSock(){
     return sock;
+}
+
+void Client::saveMessage(char *namaFile, string from, string message)
+{
+	ofstream file;
+	file.open(namaFile, ios::app);
+	if(file.is_open())
+	{
+		file << getCurrentTime() << " " << from << ":" << message << endl;
+	}
+	else
+	{
+		cout << "gagal membuka file" << endl;
+	}
+}
+
+string Client::getCurrentTime()
+{
+    time_t t = time(0);   // get time now
+    struct tm * now = localtime( & t );
+    char buffer[50];
+    int i;
+    
+    sprintf(buffer, "[%d-%d-%d %2d:%2d]", now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, 
+                    now->tm_hour, now->tm_min);
+    
+    return buffer;
 }

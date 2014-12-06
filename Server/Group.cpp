@@ -42,6 +42,7 @@ void Group::addNewMemberGroup(string namaGroup, string namaUser)
 void Group::delMember(char* namaGroup, string namaUser){
     cout << "sudah dihapust api dummy doang";
 }
+
 list<string> Group::getDaftarUser(char* filename)
 {
     ifstream file;
