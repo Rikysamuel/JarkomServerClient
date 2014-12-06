@@ -10,6 +10,7 @@
 //initiate static member
 UserData *Server::users = new UserData[MAXUSER];
 int Server::j=-1;
+ifstream Server::ifile;
 //int *Server::length = new int[MAXBUF];
 //string *Server::status = new string[MAXBUF];
 //string *Server::buffer = new string[MAXBUF];
@@ -95,6 +96,31 @@ string Server::getMessage(string message){
     return (message.substr(parse+1,message.length()-parse-1));
 }
 
+string Server::getUsernameFromMessage(string message){
+    message = getMessage(message);
+    int parse = message.find(':',0);
+    return (message.substr(0,parse));
+}
+
+string Server::getPasswordFromMessage(string message){
+    cout << "1. dalem fungsi getpassword: " << message << endl;
+    message = getMessage(message);
+    cout << "2. dalem fungsi getpassword: " << message << endl;
+    int parse = message.find(':',0);
+    return (message.substr(parse+1,message.length()-parse-1));
+}
+
+void Server::listUser(){
+    string line;
+    ifile.open("userlist.txt");
+    if(ifile.is_open()){
+        while(getline(ifile,line)){
+            cout << substrUser(line) << endl;
+        }
+        ifile.close();
+    }
+}
+
 void Server::createClientSocket() {
     clilen = sizeof(cli_addr);
     pthread_t socket_thread[2*MAXUSER];
@@ -158,10 +184,11 @@ void* Server::sendDataSocket(void* client_sock) {
     /* Main loop */
     while(users[active].getStatus()=="online"){
         if(users[active].getLength()>=0){
+            cout << "panjang :" << users[active].getLength() << endl;
             cout << "masuk" << endl;
             cout << "sender active: " << active << endl;
             cout << "pesan diterima: " << users[active].getMessage().length() << endl;
-            strcpy(buff,users[active].getMessage().c_str());
+            strcpy(buff,(users[active].getMessage()+"\n").c_str());
             write(cl_sock , buff , strlen(buff));
             users[active].setLength(-1);
             users[active].setMessage("");
@@ -181,7 +208,7 @@ void *Server::recvDataSocket(void *client_sock) {
     int c_sock = *((int*)client_sock);
     int cl_sock = *((int*)c_sock);
     char* buff; buff = new char[MAXBUF];
-    bzero(buff,MAXBUF); int len;
+    bzero(buff,MAXBUF); int len; char *str;
     
     cout << "Client Socket: " << users[active].getID() << endl;
     cout << "status client "<< users[active].getID() << ": "<< users[active].getStatus() << endl;
@@ -194,33 +221,58 @@ void *Server::recvDataSocket(void *client_sock) {
         bzero(buff,MAXBUF);
         len = recv(users[active].getID(), buff , MAXBUF , 0); //receive message from user
         printf("%s\n",buff);
+        buff = strtok(buff,"\n \r \t");
+        printf("habis di strtok: %s\n",buff);
+        cout << "panjang: " << strlen(buff) << endl;
         users[active].setMessage((string)buff);
 //  users[active].setMessage(users[active].getMessage().substr(0,users[active].getMessage().length()-2)); //delete "\n" character
+//        str = strtok(buff,"\n");
+        
         cout << len << endl;
         
         if (len>=0){
-           if(users[active].getMessage()=="logout"){   //if user type "logout"
-               cout << "masuk" << endl;
+            string dest = getDestination(users[active].getMessage());
+            int id_dest = searchIDbyName(dest);
+            
+            if(users[active].getMessage()=="logout"){   //if user type "logout"
+                cout << "masuk" << endl;
                 closeClientSocket(users[active].getID());
                 users[active].setStatus("offline");
                 cout << "client "<< users[active].getID() << ": "<< users[active].getStatus() << endl;
                 break;
-           } else if(getDestination(users[active].getMessage())=="--login--"){
-               
-           } else if (getDestination(users[active].getMessage())=="--register--"){
-               
-           } else{
-                string dest = getDestination(users[active].getMessage());
-                int id_dest = atoi(dest.c_str());
-                cout << "dest: " << dest << endl;
-                cout << "Message: " << getMessage(users[active].getMessage()) << endl;
-                cout << "Message len: " << getMessage(users[active].getMessage()).length() << endl;
-                cout << "test : " << active << endl;
-                users[1].setMessage(getMessage(users[active].getMessage()));
-                cout << "test lawan: " << users[1].getMessage()<< endl;
-           }
-           users[active].setLength(len);
-           users[1].setLength(len);
+            } else if(dest=="--login--"){
+                int success = 0;
+                listUser();
+                string usr=getUsernameFromMessage(users[active].getMessage());
+                string pass=getPasswordFromMessage(users[active].getMessage());
+                cout << "usr: " << usr << endl;
+                cout << "pass: " << pass << endl;
+                success = login(usr,pass);
+                cout << "success: " << success << endl;
+                if (success>0){
+                    char * convert; convert = new char[32];
+                    string msg = "true";
+                    write(users[active].getID(),msg.c_str(),strlen(msg.c_str()));
+                    users[active].setName(usr);
+                }else{
+                    users[active].setStatus("offline");
+//                    closeClientSocket(users[active].getID());
+                }
+            } else if (getDestination(users[active].getMessage())=="--register--"){
+
+            } else{
+                 cout << "dest: " << dest << endl;
+                 cout << "len dest: " << dest.length() << endl;
+                 cout << "id_dest" << id_dest << endl;
+                 cout << "Message: " << getMessage(users[active].getMessage()) << endl;
+                 cout << "Message len: " << getMessage(users[active].getMessage()).length() << endl;
+                 cout << "test : " << active << endl;
+                 users[id_dest].setMessage(getMessage(users[active].getMessage()));
+                 cout << "test lawan: " << users[id_dest].getMessage()<< endl;
+                 cout << "status: " << users[active].getStatus() << endl;
+                 users[active].setLength(len);
+                 users[id_dest].setLength(len);
+            }
         }
         cout << "bufer[" << active << "] : " << users[active].getMessage().length() << endl;
 //        cout << "unlock listener called" << endl;
@@ -228,4 +280,48 @@ void *Server::recvDataSocket(void *client_sock) {
     
     cout << "Thread-listener for sock: " << active << " die..........." << endl;
     pthread_exit(NULL);
+}
+
+int Server::login(string username,string password){
+    cout << password << getPassword(username);
+    return password==getPassword(username);
+}
+
+string Server::getPassword(string username){
+    string line;
+    string password = "";
+    int delimitedPosition;
+    ifile.open("userlist.txt");
+    if(ifile.is_open()){
+        while(getline(ifile,line)){
+            if(substrUser(line)==username){
+                password = substrPasswd(line);
+                false;
+            }
+        }
+        ifile.close();
+    }
+    return password;
+}
+
+string Server::substrUser(string input){
+    int delimitedPosition;
+    delimitedPosition =  input.find(" ");
+    return input.substr(0,delimitedPosition);
+}
+string Server::substrPasswd(string input){
+    int delimitedPosition;
+    delimitedPosition =  input.find(" ");
+    return input.substr(delimitedPosition+1,input.length());
+}
+
+int Server::searchIDbyName(string name) {
+    int i = 0;
+    for(i=0;i<MAXUSER;i++){
+        cout << "online: " << users[i].getName() << endl;
+        if(users[i].getName()==name){
+            cout << "found i : i" << i << endl;
+            return i;
+        }
+    }
 }

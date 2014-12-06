@@ -21,6 +21,8 @@ public:
     void setLength(int length);
     int getID();
     void setID(int sock_id);
+    string getName();
+    void setName(string name);
     string getStatus();
     void setStatus(string status);
     string getMessage();
@@ -28,6 +30,7 @@ public:
 private:
     int length;
     int sock_id;
+    string username;
     string status;
     string message;
 };

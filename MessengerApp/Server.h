@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <cstring>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "UserData.h"
 using namespace std;
@@ -38,17 +39,30 @@ public:
     void createClientSocket();
     void closeConnection();
     
+    static int login(string username, string password);
+    static string getPassword(string username);
+    static string substrUser(string input);
+    static string substrPasswd(string input);
     static string getDestination(string message);
     static string getMessage(string message);
+    static string getUsernameFromMessage(string message);
+    static string getPasswordFromMessage(string message);
     static void closeClientSocket(int sock_client);
     static void* recvDataSocket(void* client_sock);
     static void* sendDataSocket(void* client_sock);
+    static void listUser();
+    static int searchIDbyName(string name);
     
     static UserData *users;
 //    static int* length;
 //    static string* status;
 //    static string* buffer;
     static int j;
+    
+    static char data[MAXBUF];
+    static ofstream ofile;
+    static ifstream ifile;
+    
 private:
     int sock;
     int client_sock;

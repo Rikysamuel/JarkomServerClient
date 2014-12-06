@@ -77,7 +77,13 @@ void* Client::readServerReply(void* this_sock) {
     int my_sock = *(int*)client_sock;
     
     char* buff;buff=new char[MAXBUF];
-    
+    while(status==0){
+        len = recv(my_sock, buff , MAXBUF , 0);
+        if(strcmp(buff,"true")){
+            status = 1;
+            len = -1;
+        }
+    }
     while(status==1){
         len = recv(my_sock, buff , MAXBUF , 0);
         buffer = (string)buff;
@@ -105,9 +111,10 @@ char* Client::signup(string username, string password){
 char* Client::login(string username, string password){
 	string text;
 	text.append("--login--");
+        text.append("|");
 	text.append(username);
+        text.append(":");
 	text.append(password);
-	text.append(";");
     char * writable = new char[text.size() + 1];
     copy(text.begin(), text.end(), writable);
     writable[text.size()] = '\0';
@@ -177,18 +184,44 @@ void Client::printSignUp()
 
 void Client::printLogin()
 {
-    string passwordCheck = "akhfa";
+    char * buff; buff = new char[MAXBUF];
+//    string passwordCheck = "akhfa";
     cout << "username: ";
     getline(cin,username);
     cout << "password: ";
     getline(cin,password);
-    if(password.compare(passwordCheck) == 0)
-    {
-        cout << "Success Login" << endl;
-        setLoginStatus(true);
-        status = 1;
-    }
-    login(username, password);
+    
+    strcpy(buff,login(username, password));
+    cout << (string)buff << endl;
+    openTCPConnection();
+    setServerAddress((char*)"127.0.0.1");
+    reqConnect();
+    ConnectionHandler(buff);
+//    len = send(sock,buff,strlen(buff),0);
+//    len = -1;
+//    bzero(buff,MAXBUF);
+//    cout << len << endl;
+//    cout << "buff: " << buff << endl;
+//    cout << strlen(buff) << endl;
+//    if (len>=0){
+//        len = recv(sock, buff , MAXBUF , 0); //receive message from user
+//        if (strcmp(buff,"true")==0){
+//            cout << "yayyyyyyyyy" << endl;
+//            setLoginStatus(true);
+//        status = 1;
+//        
+////        cout << "req connect.........." << endl;
+////        openTCPConnection();
+////        setServerAddress((char*)"127.0.0.1");
+////        reqConnect();
+//        }
+//    }
+//    len=-1;
+//    if(password.compare(passwordCheck) == 0)
+//    {
+//        cout << "Success Login" << endl;
+//        
+//    }
 }
 
 void Client::setLoginStatus(bool status)
@@ -201,7 +234,7 @@ bool Client::isLoggedIn()
     return LoggedIn;
 }
 
-void Client::ConnectionHandler(){
+void Client::ConnectionHandler(char* buff){
     pthread_t client_thread;
     int rc; string input;
     
@@ -214,6 +247,8 @@ void Client::ConnectionHandler(){
        cout << "Error" << endl;
     }
     cout << "Thread created" << endl;
+    
+    len = send(sock,buff,strlen(buff),0);
     
     while(buffer!="logout"){
         printf("> ");

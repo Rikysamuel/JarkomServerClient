@@ -40,7 +40,7 @@ public:
     char* logout();
     string getusername();
     void toLog(/*string msg,int type*/);
-    void ConnectionHandler();
+    void ConnectionHandler(char* msg);
     void sendMessage();
     
     static void* readServerReply(void* this_sock);

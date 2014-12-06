@@ -53,12 +53,6 @@ int main(int argc, char** argv) {
             {
                 cout << "Silahkan login terlebih dahulu" << endl;
             }
-        } else{
-            cout << "req connect.........." << endl;
-            klien.openTCPConnection();
-            klien.setServerAddress((char*)"127.0.0.1");
-            klien.reqConnect();
-            klien.ConnectionHandler();
         }
         
     }

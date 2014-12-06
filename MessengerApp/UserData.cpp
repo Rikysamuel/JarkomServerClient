@@ -51,3 +51,11 @@ void UserData::setLength(int length) {
 void UserData::setStatus(string status) {
     this->status = status;
 }
+
+string UserData::getName(){
+    return username;
+}
+
+void UserData::setName(string name){
+    this->username = name;
+}
