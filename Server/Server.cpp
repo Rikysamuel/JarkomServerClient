@@ -27,6 +27,7 @@ Server::Server() {
     }
     port = 9000;
     printf("Server Started.........\n");
+    logger.init();
 }
 
 Server::Server(const Server& orig) {
@@ -247,17 +248,20 @@ void *Server::recvDataSocket(void *client_sock) {
                 string usr=getUsernameFromMessage(users[active].getMessage());
                 string pass=getPasswordFromMessage(users[active].getMessage());
                 cout << "usr: " << usr << endl;
+                cout << "usr length: " << usr.length() << endl;
                 cout << "pass: " << pass << endl;
+                cout << "pass length: " << pass.length() << endl;
                 success = login(usr,pass);
                 cout << "success: " << success << endl;
                 if (success>0){
-                    char * convert; convert = new char[32];
+                    // char * convert; convert = new char[32];
                     string msg = "true";
                     write(users[active].getID(),msg.c_str(),strlen(msg.c_str()));
                     users[active].setName(usr);
                 }else{
                     users[active].setStatus("offline");
-//                    closeClientSocket(users[active].getID());
+                    logger.loggedIn(usr);
+                   // closeClientSocket(users[active].getID());
                 }
             } else if (dest=="--register--"){
                 string usr=getUsernameFromMessage(users[active].getMessage());
@@ -269,6 +273,7 @@ void *Server::recvDataSocket(void *client_sock) {
                     string msg = "account succesfully created";
                     write(users[active].getID(),msg.c_str(),strlen(msg.c_str()));
                     users[active].setName(usr);
+                    logger.terdaftar(usr);
                 }
             }else if(dest=="--create--"){
                 string grpname = getMessage(users[active].getMessage());
@@ -315,9 +320,29 @@ void *Server::recvDataSocket(void *client_sock) {
 }
 
 int Server::login(string username,string password){
-    cout << password << endl;
-    cout << getPassword(username);
-    return (password.compare(getPassword(username))==0);
+    cout << "username: " << username << endl;
+    cout << "username length: " << username.length() << endl;
+    cout << "password: " << password << endl;
+    cout << "password length: " << password.length() << endl;
+    cout << getPassword(username) << endl;
+    if (strcmp(password.c_str(),getPassword(username).c_str())){
+        return 1;
+    } else{
+        return 0;
+    }
+    // int comp=0;
+    // int comp = password.compare(getPassword(username));
+    // if(password==getPassword(username)){
+    //     comp=1;
+    // }else{
+    //     comp=0;
+    // }
+    // cout << "comp: " << comp << endl;
+    // if (comp==0){
+    //     return 1;
+    // } else{
+    //     return 0;
+    // }
 }
 
 string Server::getPassword(string username){
