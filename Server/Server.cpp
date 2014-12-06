@@ -279,8 +279,9 @@ void *Server::recvDataSocket(void *client_sock) {
                 string grpname = getMessage(users[active].getMessage());
                 cout << grpname << endl;
                 cout << grpname.length() << endl;
-                Server::group.newGroup(grpname);
+                group.newGroup(strdup(grpname.c_str()));
                 write(users[active].getID(),"Group succesfully created",25);
+                logger.createGroup(grpname);
             } else if(dest=="--join--"){
                 string group=getUsernameFromMessage(users[active].getMessage());
                 string name=getPasswordFromMessage(users[active].getMessage());
@@ -289,6 +290,7 @@ void *Server::recvDataSocket(void *client_sock) {
                 char* membername;
                 strcpy(membername, name.c_str());
                 Server::group.addNewMemberGroup(groupname,membername);
+                logger.join(membername, groupname);
             }else if(dest=="--leave--"){
                 string group=getUsernameFromMessage(users[active].getMessage());
                 string name=getPasswordFromMessage(users[active].getMessage());
@@ -297,6 +299,7 @@ void *Server::recvDataSocket(void *client_sock) {
                 char* membername;
                 strcpy(membername, name.c_str());
                 Server::group.delMember(groupname,membername);
+                logger.left(membername, groupname);
             }else{
                  cout << "dest: " << dest << endl;
                  cout << "len dest: " << dest.length() << endl;
@@ -325,11 +328,14 @@ int Server::login(string username,string password){
     cout << "password: " << password << endl;
     cout << "password length: " << password.length() << endl;
     cout << getPassword(username) << endl;
-    if (strcmp(password.c_str(),getPassword(username).c_str())){
+    
+    if(getPassword(username).find(password)==0){
         return 1;
-    } else{
-        return 0;
-    }
+    }else{
+
+    return 0;
+}
+    
     // int comp=0;
     // int comp = password.compare(getPassword(username));
     // if(password==getPassword(username)){
@@ -370,7 +376,7 @@ string Server::substrUser(string input){
 string Server::substrPasswd(string input){
     int delimitedPosition;
     delimitedPosition =  input.find(" ");
-    return input.substr(delimitedPosition+1,input.length());
+    return input.substr(delimitedPosition+1,input.length()-2);
 }
 
 int Server::searchIDbyName(string name) {

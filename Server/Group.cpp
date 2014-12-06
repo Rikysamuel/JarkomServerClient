@@ -16,11 +16,20 @@ Group::Group(const Group& orig) {
 Group::~Group() {
 }
 
-void Group::newGroup(string namaGroup)
+void Group::newGroup(char* namaGroup)
 {
     ofstream file;
-    file.open("f.txt");
-    file.close();
+    cout << namaGroup << endl;
+    file.open(namaGroup,ios::app);
+    if(file.is_open())
+    {
+		file << "";
+		file.close();
+	}
+    else
+    {
+        cout << "File tidak berhasil dibuka";
+    }
 }
 
 void Group::addNewMemberGroup(char* namaGroup, string namaUser)
@@ -69,7 +78,6 @@ void Group::simpanGrupMessage(char* grupName, string waktu, string namaUser, str
         file.close();
     }
 }
-
 string Group::getCurrentTime()
 {
 //    time_t t = time(0);   // get time now
