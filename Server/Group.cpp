@@ -27,7 +27,7 @@ void Group::addNewMemberGroup(string namaGroup, string namaUser)
 {
     ofstream file;
     cout << namaGroup;
-    file.open(namaGroup,ios::app);
+    file.open((char *)namaGroup.c_str(),ios::app);
     if(file.is_open())
     {
         file << namaUser << endl;
