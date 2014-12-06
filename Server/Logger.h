@@ -31,6 +31,7 @@ public:
     void message(string namaPengirim, string tujuan);
     void loggedOut(string username);
     void left(string username, string leftFromWhere);
+    void terdaftar(string username);
     
 private:
     
