@@ -81,6 +81,7 @@ void* Client::readServerReply(void* this_sock) {
         len = recv(my_sock, buff , MAXBUF , 0);
         if(strcmp(buff,"true")){
             status = 1;
+            cout << "status berubah jadi: " << status << endl;
             len = -1;
         }
     }
@@ -90,6 +91,7 @@ void* Client::readServerReply(void* this_sock) {
         if (len >= 0){
             cout << "New Message received!"<< endl;
             len=-1;
+            bzero(buff,MAXBUF);
         }
     }
     cout << "keluar...." << endl;
@@ -176,13 +178,12 @@ void Client::leaveGroup(){
 }
 
 void Client::chatGroup(){
-    string request = "--leave--|";
+    string request = "--group--|";
     string groupname;buffer="";
-    printf("> Group name:");
+    printf("> Chat to Group :");
     getline(cin, groupname);
     request.append(groupname);
     buffer = request;
-    cout << "test leave group" << buffer << endl;
     Write();
 }
 
@@ -296,7 +297,10 @@ void Client::ConnectionHandler(char* buff){
     cout << "Thread created" << endl;
     
     len = send(sock,buff,strlen(buff),0);
-    
+    cout << status << endl;
+    if (status==0){
+        status=1;
+    }
     while(buffer!="logout"){
         printf("> ");
         getline(cin,input);
@@ -315,7 +319,7 @@ void Client::ConnectionHandler(char* buff){
             buffer="";
         }
         if(input=="group"){
-
+            chatGroup();
         }
     }
     if (input=="logout"){

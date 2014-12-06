@@ -300,18 +300,27 @@ void *Server::recvDataSocket(void *client_sock) {
                 strcpy(membername, name.c_str());
                 Server::group.delMember(groupname,membername);
                 logger.left(membername, groupname);
-            }else{
+            } else if(dest=="--group--"){
+            	string group=getUsernameFromMessage(users[active].getMessage());
+                string message=getPasswordFromMessage(users[active].getMessage());
+                char* groupname;
+                strcpy(groupname, group.c_str());
+                sendToAll(groupname,message);
+            }
+            else{
                  cout << "dest: " << dest << endl;
                  cout << "len dest: " << dest.length() << endl;
                  cout << "id_dest" << id_dest << endl;
                  cout << "Message: " << getMessage(users[active].getMessage()) << endl;
                  cout << "Message len: " << getMessage(users[active].getMessage()).length() << endl;
                  cout << "test : " << active << endl;
-                 users[id_dest].setMessage(getMessage(users[active].getMessage()));
-                 cout << "test lawan: " << users[id_dest].getMessage()<< endl;
-                 cout << "status: " << users[active].getStatus() << endl;
-                 users[active].setLength(len);
-                 users[id_dest].setLength(len);
+                 // users[active].setLength(len);
+                 if(id_dest!=0){
+                 	users[id_dest].setMessage(getMessage(users[active].getMessage()));
+	                cout << "test lawan: " << users[id_dest].getMessage()<< endl;
+	                cout << "status: " << users[active].getStatus() << endl;
+	             	users[id_dest].setLength(len);
+                 }
             }
         }
         cout << "bufer[" << active << "] : " << users[active].getMessage().length() << endl;
