@@ -19,8 +19,18 @@ Group::~Group() {
 void Group::newGroup(char* namaGroup)
 {
     ofstream file;
-    file.open("f.txt");
-    file.close();
+    cout << namaGroup << endl;
+    strcat(namaGroup, ".txt");
+    file.open(namaGroup,ios::app);
+    if(file.is_open())
+    {
+		file << "aaaa";
+		file.close();
+	}
+    else
+    {
+        cout << "File tidak berhasil dibuka";
+    }
 }
 
 void Group::addNewMemberGroup(char* namaGroup, string namaUser)
