@@ -315,8 +315,9 @@ void *Server::recvDataSocket(void *client_sock) {
 }
 
 int Server::login(string username,string password){
-    cout << password << getPassword(username);
-    return password==getPassword(username);
+    cout << password << endl;
+    cout << getPassword(username);
+    return (password.compare(getPassword(username))==0);
 }
 
 string Server::getPassword(string username){
