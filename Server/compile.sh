@@ -1,0 +1,1 @@
+g++ Group.cpp Logger.cpp main.cpp Server.cpp UserData.cpp -pthread
