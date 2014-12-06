@@ -54,6 +54,8 @@ public:
     void printLogin();
     bool isLoggedIn();
     void setLoginStatus(bool status);
+    void saveMessage(char *namaFile, string from, string message);
+    string getCurrentTime();
     
 private:
     bool lock;
