@@ -27,6 +27,7 @@ public:
     static void init();
     static string getCurrentTime();
     static void loggedIn(string username);
+    static void createGroup(string namaGroup);
     static void join(string username, string namagrup);
     static void message(string namaPengirim, string tujuan);
     static void loggedOut(string username);

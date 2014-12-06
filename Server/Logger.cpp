@@ -61,6 +61,21 @@ void Logger::loggedIn(string username)
     }
 }
 
+void Logger::createGroup(string namaGroup)
+{
+	ofstream filelog;
+    filelog.open("serverlog.txt", ios::app);
+    if(filelog.is_open())
+    {
+        filelog << getCurrentTime() << " " << namaGroup << " created successfully." << endl;
+        filelog.close();
+    }
+    else
+    {
+        cout << "Gagal membuka file serverlog.txt" << endl;
+    }
+}
+
 void Logger::join(string username, string namagrup)
 {
     ofstream filelog;
