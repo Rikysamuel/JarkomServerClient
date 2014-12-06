@@ -352,9 +352,19 @@ int Server::searchIDbyName(string name) {
 }
 
 int Server::signup(string username, string password){
-    ofile.open("userlist.txt");
-    ofile << username << " " << password;
-    cout << "Pendaftaran berhasil";
+    ofstream file;
+    file.open("userlist.txt",ios::app);
+    if(file.is_open())
+    {
+        file << username << " " << password << endl;
+        file.close();
+    }
+    else
+    {
+        cout << "File tidak berhasil dibuka";
+    }
+    //ofile.open("userlist.txt", std::ios::app);
+    //ofile << username << " " << password;
 }
 
 bool Server::cariUser(string username)
