@@ -23,7 +23,7 @@ public:
     Group(const Group& orig);
     virtual ~Group();
     void makeGroup();
-    void newGroup(char* namaGroup); 
+    void newGroup(string namaGroup); 
     void addNewMemberGroup(char* namaGroup, string namaUser);
     list<string> getDaftarUser(char* filename);
     void simpanGrupMessage(char* grupName, string waktu, string namaUser, string message);

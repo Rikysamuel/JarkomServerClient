@@ -274,8 +274,8 @@ void *Server::recvDataSocket(void *client_sock) {
                 string grpname = getMessage(users[active].getMessage());
                 cout << grpname << endl;
                 cout << grpname.length() << endl;
-                char * group; strcpy(group,grpname.c_str());
-                Server::group.newGroup("test.txt");
+                Server::group.newGroup(grpname);
+                write(users[active].getID(),"Group succesfully created",25);
             } else if(dest=="--join--"){
                 string group=getUsernameFromMessage(users[active].getMessage());
                 string name=getPasswordFromMessage(users[active].getMessage());

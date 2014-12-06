@@ -16,10 +16,10 @@ Group::Group(const Group& orig) {
 Group::~Group() {
 }
 
-void Group::newGroup(char* namaGroup)
+void Group::newGroup(string namaGroup)
 {
     ofstream file;
-    file.open("f.txt");
+    file.open(namaGroup.c_str());
     file.close();
 }
 
