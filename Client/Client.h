@@ -46,7 +46,7 @@ public:
     void leaveGroup();
     static void* readServerReply(void* this_sock);
     static int status;
-    
+    void joinGroup();
     /*Fungsi untuk memberikan perintah ke user*/
     void printSignUp();
     void printLogin();

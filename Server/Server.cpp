@@ -279,18 +279,22 @@ void *Server::recvDataSocket(void *client_sock) {
                 string grpname = getMessage(users[active].getMessage());
                 cout << grpname << endl;
                 cout << grpname.length() << endl;
+                //Server::group.newGroup(grpname);
                 group.newGroup(strdup(grpname.c_str()));
                 write(users[active].getID(),"Group succesfully created",25);
-                logger.createGroup(grpname);
             } else if(dest=="--join--"){
                 string group=getUsernameFromMessage(users[active].getMessage());
                 string name=getPasswordFromMessage(users[active].getMessage());
-                char* groupname;
-                strcpy(groupname, group.c_str());
+                cout << group;
+                cout << name;
+                /*
                 char* membername;
                 strcpy(membername, name.c_str());
-                Server::group.addNewMemberGroup(groupname,membername);
-                logger.join(membername, groupname);
+                cout << groupname;
+                cout << membername;
+                */
+                Server::group.addNewMemberGroup(group,name);
+                
             }else if(dest=="--leave--"){
                 string group=getUsernameFromMessage(users[active].getMessage());
                 string name=getPasswordFromMessage(users[active].getMessage());
@@ -299,7 +303,6 @@ void *Server::recvDataSocket(void *client_sock) {
                 char* membername;
                 strcpy(membername, name.c_str());
                 Server::group.delMember(groupname,membername);
-                logger.left(membername, groupname);
             }else{
                  cout << "dest: " << dest << endl;
                  cout << "len dest: " << dest.length() << endl;

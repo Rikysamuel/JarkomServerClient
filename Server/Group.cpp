@@ -16,25 +16,17 @@ Group::Group(const Group& orig) {
 Group::~Group() {
 }
 
-void Group::newGroup(char* namaGroup)
+void Group::newGroup(string namaGroup)
 {
     ofstream file;
-    cout << namaGroup << endl;
-    file.open(namaGroup,ios::app);
-    if(file.is_open())
-    {
-		file << "";
-		file.close();
-	}
-    else
-    {
-        cout << "File tidak berhasil dibuka";
-    }
+    file.open("f.txt");
+    file.close();
 }
 
-void Group::addNewMemberGroup(char* namaGroup, string namaUser)
+void Group::addNewMemberGroup(string namaGroup, string namaUser)
 {
     ofstream file;
+    cout << namaGroup;
     file.open(namaGroup,ios::app);
     if(file.is_open())
     {

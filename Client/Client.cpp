@@ -168,6 +168,19 @@ void Client::leaveGroup(){
     cout << "test leave group" << buffer << endl;
     Write();
 }
+void Client::joinGroup(){
+    string request = "--join--|";
+    string groupname;
+    buffer="";
+    printf("> Group Name: ");
+    getline(cin,groupname);
+    request.append(groupname);
+    request.append(":");
+    request.append(getusername());
+    buffer = request;
+    cout << "test join group: " << buffer << endl;
+    Write();
+}
 string Client::getusername(){
 	return username;
 }
@@ -291,6 +304,9 @@ void Client::ConnectionHandler(char* buff){
         }
         if(input=="create"){
             createGroup();
+        }
+        if(input=="join"){
+            joinGroup();
         }
     }
     if (input=="logout"){
