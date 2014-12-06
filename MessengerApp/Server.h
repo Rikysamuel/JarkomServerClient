@@ -66,6 +66,9 @@ public:
     static UserData *users;
     static Group group;
     
+    //function tambahan for client
+    bool cariUser(string username);
+    
 private:
     int sock;
     int client_sock;

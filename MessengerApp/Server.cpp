@@ -356,3 +356,24 @@ int Server::signup(string username, string password){
     ofile << username << " " << password;
     cout << "Pendaftaran berhasil";
 }
+
+bool Server::cariUser(string username)
+{
+    string line;
+    ifile.open("userlist.txt");
+    if(ifile.is_open())
+    {
+        while(getline(ifile,line)){
+            if(substrUser(line).compare(username) == 0){
+                ifile.close();
+                return true;
+            }
+        }
+        ifile.close();
+        return false;
+    }
+    else
+    {
+        cout << "gagal membuka file userlist.txt" << endl;
+    }
+}

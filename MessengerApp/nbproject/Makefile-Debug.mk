@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/Group.o \
+	${OBJECTDIR}/Logger.o \
 	${OBJECTDIR}/Server.o \
 	${OBJECTDIR}/UserData.o \
 	${OBJECTDIR}/main.o
@@ -69,6 +70,11 @@ ${OBJECTDIR}/Group.o: Group.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Group.o Group.cpp
+
+${OBJECTDIR}/Logger.o: Logger.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Logger.o Logger.cpp
 
 ${OBJECTDIR}/Server.o: Server.cpp 
 	${MKDIR} -p ${OBJECTDIR}

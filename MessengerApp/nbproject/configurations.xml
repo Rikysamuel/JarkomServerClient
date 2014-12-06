@@ -5,6 +5,8 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>Group.h</itemPath>
+      <itemPath>AllInclude.h</itemPath>
+      <itemPath>Logger.h</itemPath>
       <itemPath>Server.h</itemPath>
       <itemPath>UserData.h</itemPath>
     </logicalFolder>
@@ -16,6 +18,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>Group.cpp</itemPath>
+      <itemPath>Logger.cpp</itemPath>
       <itemPath>Server.cpp</itemPath>
       <itemPath>UserData.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
@@ -48,6 +51,11 @@
       <item path="Group.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Group.h" ex="false" tool="3" flavor2="0">
+      <item path="AllInclude.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Logger.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Logger.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -83,6 +91,11 @@
       <item path="Group.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Group.h" ex="false" tool="3" flavor2="0">
+      <item path="AllInclude.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Logger.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Logger.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.cpp" ex="false" tool="1" flavor2="0">
       </item>
