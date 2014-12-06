@@ -24,6 +24,7 @@
 #include <fstream>
 #include <string>
 #include "UserData.h"
+#include "Group.h"
 using namespace std;
 
 class Server {
@@ -39,6 +40,7 @@ public:
     void createClientSocket();
     void closeConnection();
     
+    static int signup(string username, string password);
     static int login(string username, string password);
     static string getPassword(string username);
     static string substrUser(string input);
@@ -52,16 +54,17 @@ public:
     static void* sendDataSocket(void* client_sock);
     static void listUser();
     static int searchIDbyName(string name);
+    static bool checkNameExist();
     
-    static UserData *users;
 //    static int* length;
 //    static string* status;
 //    static string* buffer;
     static int j;
-    
     static char data[MAXBUF];
     static ofstream ofile;
     static ifstream ifile;
+    static UserData *users;
+    static Group group;
     
 private:
     int sock;

@@ -10,7 +10,10 @@
 //initiate static member
 UserData *Server::users = new UserData[MAXUSER];
 int Server::j=-1;
+ofstream Server::ofile;
 ifstream Server::ifile;
+Group Server::group;
+
 //int *Server::length = new int[MAXBUF];
 //string *Server::status = new string[MAXBUF];
 //string *Server::buffer = new string[MAXBUF];
@@ -225,8 +228,6 @@ void *Server::recvDataSocket(void *client_sock) {
         printf("habis di strtok: %s\n",buff);
         cout << "panjang: " << strlen(buff) << endl;
         users[active].setMessage((string)buff);
-//  users[active].setMessage(users[active].getMessage().substr(0,users[active].getMessage().length()-2)); //delete "\n" character
-//        str = strtok(buff,"\n");
         
         cout << len << endl;
         
@@ -258,9 +259,33 @@ void *Server::recvDataSocket(void *client_sock) {
                     users[active].setStatus("offline");
 //                    closeClientSocket(users[active].getID());
                 }
-            } else if (getDestination(users[active].getMessage())=="--register--"){
-
-            } else{
+            } else if (dest=="--register--"){
+                string usr=getUsernameFromMessage(users[active].getMessage());
+                string pass=getPasswordFromMessage(users[active].getMessage());
+                int success = 0;
+                success = signup(usr,pass);
+                cout <<"success: " << success << endl;
+                if (success>0){
+                    string msg = "account succesfully created";
+                    write(users[active].getID(),msg.c_str(),strlen(msg.c_str()));
+                    users[active].setName(usr);
+                }
+            }else if(dest=="--create--"){
+                string grpname = getMessage(users[active].getMessage());
+                cout << grpname << endl;
+                cout << grpname.length() << endl;
+                char * group; strcpy(group,grpname.c_str());
+                Server::group.newGroup("test.txt");
+            } else if(dest=="--join--"){
+                string group=getUsernameFromMessage(users[active].getMessage());
+                string name=getPasswordFromMessage(users[active].getMessage());
+                char* groupname;
+                strcpy(groupname, group.c_str());
+                char* membername;
+                strcpy(membername, name.c_str());
+                Server::group.addNewMemberGroup(groupname,membername);
+            }
+            else{
                  cout << "dest: " << dest << endl;
                  cout << "len dest: " << dest.length() << endl;
                  cout << "id_dest" << id_dest << endl;
@@ -324,4 +349,10 @@ int Server::searchIDbyName(string name) {
             return i;
         }
     }
+}
+
+int Server::signup(string username, string password){
+    ofile.open("userlist.txt");
+    ofile << username << " " << password;
+    cout << "Pendaftaran berhasil";
 }
