@@ -120,3 +120,18 @@ void Logger::left(string username, string leftFromWhere)
         cout << "Gagal membuka file serverlog.txt" << endl;
     }
 }
+
+void Logger::terdaftar(string username)
+{
+    ofstream filelog;
+    filelog.open("serverlog.txt", ios::app);
+    if(filelog.is_open())
+    {
+        filelog << getCurrentTime() << " " << username << " telah mendaftar." << endl;
+        filelog.close();
+    }
+    else
+    {
+        cout << "Gagal membuka file serverlog.txt" << endl;
+    }
+}
