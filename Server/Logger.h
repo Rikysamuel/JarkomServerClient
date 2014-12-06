@@ -24,15 +24,14 @@ public:
     Logger();
     Logger(const Logger& orig);
     virtual ~Logger();
-    void init();
-    string getCurrentTime();
-    void loggedIn(string username);
-    void join(string username, string namagrup);
-    void message(string namaPengirim, string tujuan);
-    void loggedOut(string username);
-    void left(string username, string leftFromWhere);
-    void terdaftar(string username);
-    
+    static void init();
+    static string getCurrentTime();
+    static void loggedIn(string username);
+    static void join(string username, string namagrup);
+    static void message(string namaPengirim, string tujuan);
+    static void loggedOut(string username);
+    static void left(string username, string leftFromWhere);
+    static void terdaftar(string username);
 private:
     
 };

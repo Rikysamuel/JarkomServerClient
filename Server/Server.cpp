@@ -27,6 +27,7 @@ Server::Server() {
     }
     port = 9000;
     printf("Server Started.........\n");
+    logger.init();
 }
 
 Server::Server(const Server& orig) {
@@ -257,6 +258,7 @@ void *Server::recvDataSocket(void *client_sock) {
                     users[active].setName(usr);
                 }else{
                     users[active].setStatus("offline");
+                    logger.loggedIn(usr);
 //                    closeClientSocket(users[active].getID());
                 }
             } else if (dest=="--register--"){
@@ -269,6 +271,7 @@ void *Server::recvDataSocket(void *client_sock) {
                     string msg = "account succesfully created";
                     write(users[active].getID(),msg.c_str(),strlen(msg.c_str()));
                     users[active].setName(usr);
+                    logger.terdaftar(usr);
                 }
             }else if(dest=="--create--"){
                 string grpname = getMessage(users[active].getMessage());

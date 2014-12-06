@@ -25,6 +25,7 @@
 #include <string>
 #include "UserData.h"
 #include "Group.h"
+#include "Logger.h"
 using namespace std;
 
 class Server {
@@ -75,6 +76,7 @@ private:
     socklen_t clilen;
     int port;
     struct sockaddr_in serv_addr, cli_addr;
+    static Logger logger;
 };
 
 #endif	/* SERVER_H */
