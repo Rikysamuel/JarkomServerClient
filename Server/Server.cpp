@@ -325,11 +325,14 @@ int Server::login(string username,string password){
     cout << "password: " << password << endl;
     cout << "password length: " << password.length() << endl;
     cout << getPassword(username) << endl;
-    if (strcmp(password.c_str(),getPassword(username).c_str())){
+    
+    if(getPassword(username).find(password)==0){
         return 1;
-    } else{
-        return 0;
-    }
+    }else{
+
+    return 0;
+}
+    
     // int comp=0;
     // int comp = password.compare(getPassword(username));
     // if(password==getPassword(username)){
@@ -370,7 +373,7 @@ string Server::substrUser(string input){
 string Server::substrPasswd(string input){
     int delimitedPosition;
     delimitedPosition =  input.find(" ");
-    return input.substr(delimitedPosition+1,input.length());
+    return input.substr(delimitedPosition+1,input.length()-2);
 }
 
 int Server::searchIDbyName(string name) {

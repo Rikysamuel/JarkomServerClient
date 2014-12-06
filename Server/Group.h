@@ -15,10 +15,12 @@
 #include <ctime>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 using namespace std;
 
 class Group {
 public:
+    std::vector<string> userList;
     Group();
     Group(const Group& orig);
     virtual ~Group();

@@ -68,7 +68,6 @@ void Group::simpanGrupMessage(char* grupName, string waktu, string namaUser, str
         file.close();
     }
 }
-
 string Group::getCurrentTime()
 {
 //    time_t t = time(0);   // get time now
