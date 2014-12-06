@@ -346,6 +346,7 @@ void Client::ConnectionHandler(char* buff){
 //    pthread_cancel(client_thread);
 //    pthread_join(client_thread,NULL);
 //    pthread_exit(NULL);
+    }
 }
 
 int Client::getSock(){
