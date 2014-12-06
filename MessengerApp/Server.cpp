@@ -325,3 +325,10 @@ int Server::searchIDbyName(string name) {
         }
     }
 }
+
+void Server::signup(string username, string password)
+{
+    ofile.open("userlist.txt",ios::app);
+    ofile << username << " " << password;
+    ofile.close();
+}

@@ -63,6 +63,9 @@ public:
     static ofstream ofile;
     static ifstream ifile;
     
+    //function tambahan for client
+    void signup(string username, string password);
+    
 private:
     int sock;
     int client_sock;
