@@ -4,6 +4,8 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>AllInclude.h</itemPath>
+      <itemPath>Logger.h</itemPath>
       <itemPath>Server.h</itemPath>
       <itemPath>UserData.h</itemPath>
     </logicalFolder>
@@ -14,6 +16,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>Logger.cpp</itemPath>
       <itemPath>Server.cpp</itemPath>
       <itemPath>UserData.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
@@ -43,6 +46,12 @@
           <commandLine>-pthread</commandLine>
         </ccTool>
       </compileType>
+      <item path="AllInclude.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Logger.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Logger.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Server.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.h" ex="false" tool="3" flavor2="0">
@@ -74,6 +83,12 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="AllInclude.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Logger.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Logger.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Server.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.h" ex="false" tool="3" flavor2="0">
