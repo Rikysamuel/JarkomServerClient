@@ -44,3 +44,9 @@ user.txt berisi "user|password;"
 grup.txt berisi "grupname|user1,user2,user3,user-n;"
 log.txt berisi "[tanggal jam] 'log'" --> append terus tiap update
 
+TO DO:
+	- GROUP Chat
+	- LOG Personal Message (History Chat)
+	- LOG Group Chat (History Masing2 Personal Chat)
+	- USer Baca file pertama kali di server ketika login -> ada pesan/kaga
+	- Nulis ke file kalo waktu chat lawan chat nya ga ol

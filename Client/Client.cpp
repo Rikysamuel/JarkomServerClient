@@ -47,12 +47,6 @@ void Client::reqConnect() {
 
     // connect ke server, jika error keluar
     if (connect(sock,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) exit(1);
-    
-    cout << "Server greetings: ";
-    len = recv(sock, buff , MAXBUF , 0);
-    if (len >= 0){
-        printf("%s\n", buff);
-    }
 }
 
 void Client::setServerAddress(char* serv_address) {
@@ -77,20 +71,12 @@ void* Client::readServerReply(void* this_sock) {
     int my_sock = *(int*)client_sock;
     
     char* buff;buff=new char[MAXBUF];
-    while(status==0){
-        len = recv(my_sock, buff , MAXBUF , 0);
-        if(strcmp(buff,"true")){
-            status = 1;
-            cout << "status berubah jadi: " << status << endl;
-            len = -1;
-        }
-    }
     while(status==1){
         len = recv(my_sock, buff , MAXBUF , 0);
         buffer = (string)buff;
         if (len >= 0){
             cout << "New Message received!"<< endl;
-            len=-1;
+            cout << ">";
             bzero(buff,MAXBUF);
         }
     }
@@ -101,6 +87,7 @@ void* Client::readServerReply(void* this_sock) {
 void Client::openInbox(){
     cout << buffer << endl;
     buffer="";
+    len = -1;
 }
 
 char* Client::signup(string username, string password){
@@ -329,9 +316,9 @@ void Client::ConnectionHandler(char* buff){
         }
         if(input=="join"){
             joinGroup();
+        }
         if(input=="read"){
             openInbox();
-            buffer="";
         }
         if(input=="group"){
             chatGroup();
@@ -346,7 +333,6 @@ void Client::ConnectionHandler(char* buff){
 //    pthread_cancel(client_thread);
 //    pthread_join(client_thread,NULL);
 //    pthread_exit(NULL);
-    }
 }
 
 int Client::getSock(){

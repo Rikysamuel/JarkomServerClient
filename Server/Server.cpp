@@ -182,9 +182,6 @@ void* Server::sendDataSocket(void* client_sock) {
     
     cout << "Client Socket: " << users[active].getID() << endl;
     
-    char* reply = (char*) ("\"Welcome to the MESSENGER\"\n");   //welcome message
-    write(cl_sock , reply , strlen(reply)); //send welcome message
-    
     /* Main loop */
     while(users[active].getStatus()=="online"){
         if(users[active].getLength()>=0){
@@ -226,11 +223,7 @@ void *Server::recvDataSocket(void *client_sock) {
         len = recv(users[active].getID(), buff , MAXBUF , 0); //receive message from user
         printf("%s\n",buff);
         buff = strtok(buff,"\n\r");
-        printf("habis di strtok: %s\n",buff);
-        cout << "panjang: " << strlen(buff) << endl;
         users[active].setMessage((string)buff);
-        
-        cout << len << endl;
         
         if (len>=0){
             string dest = getDestination(users[active].getMessage());
@@ -255,13 +248,13 @@ void *Server::recvDataSocket(void *client_sock) {
                 cout << "success: " << success << endl;
                 if (success>0){
                     // char * convert; convert = new char[32];
-                    string msg = "true";
+                    string msg = "Welcome to the MESSENGER";
                     write(users[active].getID(),msg.c_str(),strlen(msg.c_str()));
                     users[active].setName(usr);
                 }else{
                     users[active].setStatus("offline");
                     logger.loggedIn(usr);
-                   // closeClientSocket(users[active].getID());
+                   	closeClientSocket(users[active].getID());
                 }
             } else if (dest=="--register--"){
                 string usr=getUsernameFromMessage(users[active].getMessage());
@@ -309,6 +302,7 @@ void *Server::recvDataSocket(void *client_sock) {
                 string message=getPasswordFromMessage(users[active].getMessage());
                 char* groupname;
                 strcpy(groupname, group.c_str());
+                cout << "group message: " << message << endl;
                 sendToAll(groupname,message);
             }else{
                  cout << "dest: " << dest << endl;
@@ -318,8 +312,9 @@ void *Server::recvDataSocket(void *client_sock) {
                  cout << "Message len: " << getMessage(users[active].getMessage()).length() << endl;
                  cout << "test : " << active << endl;
                  // users[active].setLength(len);
-                 if(id_dest!=0){
-                 	users[id_dest].setMessage(getMessage(users[active].getMessage()));
+                 if(id_dest!=-1){
+                 	string concatmsg = users[active].getName() + " : " + getMessage(users[active].getMessage());
+                 	users[id_dest].setMessage(concatmsg);
 	                cout << "test lawan: " << users[id_dest].getMessage()<< endl;
 	                cout << "status: " << users[active].getStatus() << endl;
 	             	users[id_dest].setLength(len);
@@ -441,12 +436,16 @@ bool Server::cariUser(string username)
 }
 
 void Server::sendToAll(char* filename, string message){
+	cout << "masuk" << endl;
 	list<string> members = Server::group.getDaftarUser(filename);
+	cout << "nbel: " << members.count() << endl;
 	list<string> offmembers;
 	string member; int pos;
 
 	while(!members.empty()){
+		cout << "not empty" << endl;
 		member = members.front();
+		cout << "member-1: "<< member << endl;
 		pos = searchIDbyName(member);
 		if (pos!=-1){
 			users[pos].setMessage(message);
